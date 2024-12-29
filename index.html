@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Upstream Patches</title>
+        <style>
+            body {
+                margin: 0px;
+                padding: 0px;
+            }
+            h1 {
+                color: indianred;
+                text-align: center;
+                height: 10%;
+            }
+
+            #search {
+                font-size: 1.2em;
+                padding: 5px;
+                border-radius: 10px;
+                color: indianred;
+            }
+
+            footer {
+                width: 100%;
+                height: 10%;
+                text-align: center;
+                position: absolute;
+                bottom: 0%;
+                background-color: indianred;
+                font-size: 1.5em;
+                color: white;
+                font-weight: bold;
+            }
+
+            .spinner {
+                display: none; /* Hidden by default */
+                border: 4px solid rgba(255, 255, 255, 0.3);
+                border-top: 4px solid #3498db;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                animation: spin 1s linear infinite;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin: -15px 0 0 -15px; /* Center the spinner */
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+        </style>
+    </head>
+    <body>
+        <h1>Upstream Patches - KVM QE Team</h1>
+        <form id="searchForm" method="post">
+            <label for="krb_id">Kerberos ID: </label>
+            <input type="text" id="krb_id" name="krb_id">
+            <label for="tested">Tested patches</label>
+            <input type="radio" id="tested" name="upstream_action" value="Tested-by">
+            <label for="reported">Reported patches</label>
+            <input type="radio" id="reported" name="upstream_action" value="Reported-by">
+            <input type="submit" value="Search" id="search">
+        </form>
+        <div class="spinner" id="spinner"></div>
+        <pre id="result"></pre>
+
+        <script>
+            async function searchPatches(dataToSend) {
+                console.log('Sending data:', JSON.stringify(dataToSend));
+                const spinner = document.getElementById('spinner');
+                try {
+                    spinner.style.display = 'block';
+                    const response = await fetch('/search', {
+                        method: 'POST', // Use POST method
+                        headers: {
+                            'Content-Type': 'application/json' // Indicate that we're sending JSON
+                        },
+                        body: JSON.stringify(dataToSend) // Convert the data to a JSON string
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Error: ${response.status} - ${errorText}`);
+                    }
+
+                    const data = await response.text(); // Parse the response as text
+                    document.getElementById('result').innerText = data; // Display the result
+                } catch (error) {
+                    console.error('There was a problem with the fetch operation:', error);
+                } finally {
+                    spinner.style.display = 'none';
+                }
+            }
+
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                event.preventDefault();  // Prevent the default form submission
+                const krb_id = document.getElementById('krb_id').value;
+                const upstream_action = document.querySelector('input[name="upstream_action"]:checked').value;
+                const dataToSend = {krb_id, upstream_action}
+                searchPatches(dataToSend);
+            });
+
+        </script>
+    </body>
+</html>
