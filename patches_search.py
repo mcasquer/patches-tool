@@ -64,7 +64,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def search_patches(data):
     """Simulate searching for patches in a git repository."""
-    repos = ['/home/mcasquer/Workspace/patches/linux', '/home/mcasquer/Workspace/patches/qemu']
+    # IMPORTANT! Updates the paths to the Linux and QEMU repositories
+    repos = ['/path/to/linux', '/path/to/qemu']
     total_patches = ""
     patches_amount = 0
     upstream_action = data["upstream_action"]
