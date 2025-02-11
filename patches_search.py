@@ -69,11 +69,11 @@ def search_patches(data):
     total_patches = ""
     patches_amount = 0
     upstream_action = data["upstream_action"]
-    krb_id = data["krb_id"]
+    mail = data["mail"]
 
     for repo in repos:
         os.chdir(repo)
-        result = subprocess.run(['git', 'log', f'--grep={upstream_action}.*{krb_id}', '--pretty=format:%H %s'], capture_output=True, text=True)
+        result = subprocess.run(['git', 'log', f'--grep={upstream_action}.*{mail}', '--pretty=format:%H %s'], capture_output=True, text=True)
         if result.stdout:
             commits = result.stdout.strip().split('\n')
             for commit in commits:
