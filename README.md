@@ -14,10 +14,6 @@ This is useful for developers, maintainers, and contributors who want to track s
 
 ## Prerequisites
 
-Before using this tool, ensure that you have the following installed:
+Before using this tool, ensure that you have Python 3.6+ installed and run the `setup.py` which will install **Git** if needed and clone the QEMU and Kernel repositories. 
 
-- Python 3.6+ (Needed for running the tool)
-- Git (for interacting with repositories)
-
-> **Important:** at this moment the QEMU and Linux Kernel should be previously
-cloned into the system running this tool, and its path updated in `patches_search.py`
+> **Important:** QEMU and Linux Kernel paths should be updated in `patches_search.py`
